@@ -19,57 +19,64 @@ class _MyAppState extends State {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(primaryColor: Colors.white),
       home: Scaffold(
+        backgroundColor: Color.fromARGB(255, 200, 200, 255),
         appBar: AppBar(title: Text('WEATHER APP'), centerTitle: true),
         body: Column(children: [
           Padding(padding: EdgeInsets.only(top: 10)),
-          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: <
-              Widget>[
-            Text("Latitude: "),
-            Container(
-                width: 80,
-                height: 35,
-                child: TextFormField(
-                    controller: _lat,
-                    decoration: InputDecoration(border: OutlineInputBorder()))),
-            Text("Longitude: "),
-            Container(
-                width: 80,
-                height: 35,
-                child: TextFormField(
-                    controller: _long,
-                    decoration: InputDecoration(border: OutlineInputBorder()))),
-            ElevatedButton(onPressed: showWeather, child: Text("Show Weather"))
-          ]),
-          ...getCityTitle(),
-          getWeatherList2()
-          // Expanded(
-          //     child: SingleChildScrollView(
-          //         child: Column(children: [...getWeatherList()])))
+          Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text("Latitude: "),
+                SizedBox(
+                    width: 80,
+                    height: 35,
+                    child: TextFormField(
+                        controller: _lat,
+                        decoration: InputDecoration(
+                            filled: true,
+                            fillColor: Color.fromARGB(255, 230, 230, 230),
+                            border: OutlineInputBorder()))),
+                Text("Longitude: "),
+                SizedBox(
+                    width: 80,
+                    height: 35,
+                    child: TextFormField(
+                        controller: _long,
+                        decoration: InputDecoration(
+                            filled: true,
+                            fillColor: Color.fromARGB(255, 230, 230, 230),
+                            border: OutlineInputBorder()))),
+                ElevatedButton(
+                    onPressed: showWeather, child: Text("Show Weather"))
+              ]),
+          getCityTitle(),
+          Flexible(child:  getWeatherList()),
         ]),
       ),
     );
   }
-
-  List<Widget> getCityTitle() {
-    List<Widget> childs = [];
+  
+//импрортировать гетх почитать доки, вьюмодель - контроллер, потом репозиторий
+  ListTile getCityTitle() {
     if (_weathers.isNotEmpty) {
-      childs.add(Table(border: TableBorder.all(), children: [
-        TableRow(children: [
-          Text("Weather forecast for ${_weathers[0].cityName}",
-              style: TextStyle(fontSize: 40), textAlign: TextAlign.center)
-        ])
-      ]));
+      return ListTile(
+          title: Text("Weather forecast for ${_weathers[0].cityName}",
+              style: TextStyle(fontSize: 36), textAlign: TextAlign.center));
     }
-    return childs;
+    return ListTile();
   }
 
-  ListView getWeatherList2() {
-    return ListView.builder(
+  ListView getWeatherList() {
+    return ListView.separated(
+        separatorBuilder: (context, index) =>
+            Divider(color: Color.fromARGB(255, 200, 200, 255)),
         itemCount: _weathers.length,
         itemBuilder: (BuildContext context, int index) {
           return ListTile(
+              shape: RoundedRectangleBorder(
+                  side: BorderSide(width: 3, color: Colors.amber.shade700),
+                  borderRadius: BorderRadius.only(topLeft: Radius.circular(20),bottomRight: Radius.circular(20))),
               leading: CachedNetworkImage(
                   imageUrl:
                       "http://openweathermap.org/img/wn/${_weathers[index].iconCode}@2x.png",
@@ -84,42 +91,17 @@ class _MyAppState extends State {
         });
   }
 
-  List<Widget> getWeatherList() {
-    List<Widget> childs = [];
-    for (int i = 0; i < _weathers.length; i++) {
-      childs.add(Table(
-          defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-          border: TableBorder.all(),
-          columnWidths: const <int, TableColumnWidth>{
-            0: FixedColumnWidth(100),
-            1: FlexColumnWidth(),
-          },
-          children: [
-            TableRow(children: [
-              Container(
-                  height: 100,
-                  child: CachedNetworkImage(
-                      imageUrl:
-                          "http://openweathermap.org/img/wn/${_weathers[i].iconCode}@2x.png",
-                      progressIndicatorBuilder:
-                          (context, url, downloadProgress) =>
-                              CircularProgressIndicator(
-                                  value: downloadProgress.progress),
-                      errorWidget: (context, url, error) => Icon(Icons.error))),
-              Text(
-                  " ${_weathers[i].dateString}\n ${_weathers[i].temperature}°C, " +
-                      "${_weathers[i].description}, feels_like ${_weathers[i].feelsLike}°C",
-                  style: TextStyle(fontSize: 20)),
-            ])
-          ]));
-    }
-    return childs;
-  }
-
   void showWeather() async {
     FocusManager.instance.primaryFocus?.unfocus();
-    String lat = _lat.text == "" ? "49.882" : _lat.text;
-    String long = _long.text == "" ? "36.065" : _long.text;
+    String lat;
+    String long;
+    try {
+      lat = double.parse(_lat.text).toString();
+      long = double.parse(_long.text).toString();
+    } catch (e) {
+      lat = "49.882";
+      long = "36.065";
+    }
     _weathers = await GetWeather.fetchWeather(lat, long);
     setState(() {});
   }
