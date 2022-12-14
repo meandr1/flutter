@@ -1,4 +1,3 @@
-// ignore_for_file: prefer_const_constructors
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'weather.dart';
@@ -21,29 +20,29 @@ class _MyAppState extends State {
     return MaterialApp(
       home: Scaffold(
         backgroundColor: Color.fromARGB(255, 200, 200, 255),
-        appBar: AppBar(title: Text('WEATHER APP'), centerTitle: true),
+        appBar: AppBar(title: const Text('WEATHER APP'), centerTitle: true),
         body: Column(children: [
-          Padding(padding: EdgeInsets.only(top: 10)),
+          const Padding(padding: EdgeInsets.only(top: 10)),
           Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Text("Latitude: "),
+                const Text("Latitude: "),
                 SizedBox(
                     width: 80,
                     height: 35,
                     child: TextFormField(
                         controller: _lat,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                             filled: true,
                             fillColor: Color.fromARGB(255, 230, 230, 230),
                             border: OutlineInputBorder()))),
-                Text("Longitude: "),
+                const Text("Longitude: "),
                 SizedBox(
                     width: 80,
                     height: 35,
                     child: TextFormField(
                         controller: _long,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                             filled: true,
                             fillColor: Color.fromARGB(255, 230, 230, 230),
                             border: OutlineInputBorder()))),
@@ -56,27 +55,26 @@ class _MyAppState extends State {
       ),
     );
   }
-  
-//импрортировать гетх почитать доки, вьюмодель - контроллер, потом репозиторий
+
   ListTile getCityTitle() {
     if (_weathers.isNotEmpty) {
       return ListTile(
           title: Text("Weather forecast for ${_weathers[0].cityName}",
-              style: TextStyle(fontSize: 36), textAlign: TextAlign.center));
+              style: const TextStyle(fontSize: 36), textAlign: TextAlign.center));
     }
-    return ListTile();
+    return const ListTile();
   }
 
   ListView getWeatherList() {
     return ListView.separated(
         separatorBuilder: (context, index) =>
-            Divider(color: Color.fromARGB(255, 200, 200, 255)),
+            const Divider(color: Color.fromARGB(255, 200, 200, 255)),
         itemCount: _weathers.length,
         itemBuilder: (BuildContext context, int index) {
           return ListTile(
               shape: RoundedRectangleBorder(
                   side: BorderSide(width: 3, color: Colors.amber.shade700),
-                  borderRadius: BorderRadius.only(topLeft: Radius.circular(20),bottomRight: Radius.circular(20))),
+                  borderRadius: const  BorderRadius.only(topLeft: Radius.circular(20),bottomRight: Radius.circular(20))),
               leading: CachedNetworkImage(
                   imageUrl:
                       "http://openweathermap.org/img/wn/${_weathers[index].iconCode}@2x.png",
@@ -87,7 +85,7 @@ class _MyAppState extends State {
               title: Text(
                   " ${_weathers[index].dateString}\n ${_weathers[index].temperature}°C, " +
                       "${_weathers[index].description}, feels_like ${_weathers[index].feelsLike}°C",
-                  style: TextStyle(fontSize: 20)));
+                  style:const TextStyle(fontSize: 20)));
         });
   }
 
