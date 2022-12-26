@@ -3,14 +3,13 @@ import 'package:weather/types.dart';
 import 'repository.dart';
 
 class RepositoryController extends GetxController {
-  final _repository = WeatherRepository().obs;
+  final _repository = WeatherRepository();
+  var weatherList = RxList.empty();
 
   void updateWeather(String lat, String long) async {
-    await _repository.value.updateRepo(lat,long);
-    _repository.refresh();
-  }
-
-  List<ExtendedWeather> getRepo() {
-    return _repository.value.getRepo();
+    List<ExtendedWeather>? updateRepo = await _repository.updateRepo(lat, long);
+    if (updateRepo != null) {
+      weatherList.value = updateRepo;
+    }
   }
 }
