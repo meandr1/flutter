@@ -2,7 +2,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'types.dart';
 
-class GetWeather implements GettingWeather {
+class WeatherController implements GettingWeather {
+  
   static const String _apiKey = "4d0fad6bad0e06ad9ecd85d12593a7a2";
 
   static Future<List<ExtendedWeather>> fetchWeather(

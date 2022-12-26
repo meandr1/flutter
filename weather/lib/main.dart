@@ -1,19 +1,14 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'weather.dart';
-import 'types.dart';
+import 'package:get/get.dart';
+import 'repositoryController.dart';
 
 void main() => runApp(MyApp());
 
-class MyApp extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() => _MyAppState();
-}
-
-class _MyAppState extends State {
+class MyApp extends StatelessWidget {
   final _lat = TextEditingController();
   final _long = TextEditingController();
-  List<ExtendedWeather> _weathers = [];
+  final controller = Get.put(RepositoryController());
 
   @override
   Widget build(BuildContext context) {
@@ -49,43 +44,41 @@ class _MyAppState extends State {
                 ElevatedButton(
                     onPressed: showWeather, child: Text("Show Weather"))
               ]),
-          getCityTitle(),
-          Flexible(child:  getWeatherList()),
+          Obx(() => Text(
+              controller.getRepo().isNotEmpty
+                  ? "Weather forecast for ${controller.getRepo()[0].cityName}"
+                  : "",
+              style: const TextStyle(fontSize: 36),
+              textAlign: TextAlign.center)),
+          Flexible(child: Obx(() => getWeatherList())),
         ]),
       ),
     );
-  }
-
-  ListTile getCityTitle() {
-    if (_weathers.isNotEmpty) {
-      return ListTile(
-          title: Text("Weather forecast for ${_weathers[0].cityName}",
-              style: const TextStyle(fontSize: 36), textAlign: TextAlign.center));
-    }
-    return const ListTile();
   }
 
   ListView getWeatherList() {
     return ListView.separated(
         separatorBuilder: (context, index) =>
             const Divider(color: Color.fromARGB(255, 200, 200, 255)),
-        itemCount: _weathers.length,
+        itemCount: controller.getRepo().length,
         itemBuilder: (BuildContext context, int index) {
           return ListTile(
               shape: RoundedRectangleBorder(
                   side: BorderSide(width: 3, color: Colors.amber.shade700),
-                  borderRadius: const  BorderRadius.only(topLeft: Radius.circular(20),bottomRight: Radius.circular(20))),
+                  borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(20),
+                      bottomRight: Radius.circular(20))),
               leading: CachedNetworkImage(
                   imageUrl:
-                      "http://openweathermap.org/img/wn/${_weathers[index].iconCode}@2x.png",
+                      "http://openweathermap.org/img/wn/${controller.getRepo()[index].iconCode}@2x.png",
                   progressIndicatorBuilder: (context, url, downloadProgress) =>
                       CircularProgressIndicator(
                           value: downloadProgress.progress),
                   errorWidget: (context, url, error) => Icon(Icons.error)),
               title: Text(
-                  " ${_weathers[index].dateString}\n ${_weathers[index].temperature}°C, " +
-                      "${_weathers[index].description}, feels_like ${_weathers[index].feelsLike}°C",
-                  style:const TextStyle(fontSize: 20)));
+                  " ${controller.getRepo()[index].dateString}\n ${controller.getRepo()[index].temperature}°C, " +
+                      "${controller.getRepo()[index].description}, feels_like ${controller.getRepo()[index].feelsLike}°C",
+                  style: const TextStyle(fontSize: 20)));
         });
   }
 
@@ -100,7 +93,6 @@ class _MyAppState extends State {
       lat = "49.882";
       long = "36.065";
     }
-    _weathers = await GetWeather.fetchWeather(lat, long);
-    setState(() {});
+    controller.updateWeather(lat, long);
   }
 }

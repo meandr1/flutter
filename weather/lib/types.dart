@@ -36,13 +36,13 @@ class ExtendedWeather extends Weather with FormattedDate {
   ExtendedWeather.fromJson(jsonData, DateTime date, int position) {
     final weatherList = jsonData['list'];
 
-    this.cityName = jsonData['city']['name'];
-    this.temperature = weatherList[position]['main']['temp'].round();
-    this.iconCode = weatherList[position]['weather'][0]['icon'];
-    this.description = weatherList[position]['weather'][0]['main'];
-    this.time = DateTime.parse(weatherList[position]['dt_txt']);
-    this.feelsLike = weatherList[position]['main']['feels_like'].round();
-    this.dateString = formatDate(date);
+    cityName = jsonData['city']['name'];
+    temperature = weatherList[position]['main']['temp'].round();
+    iconCode = weatherList[position]['weather'][0]['icon'];
+    description = weatherList[position]['weather'][0]['main'];
+    time = DateTime.parse(weatherList[position]['dt_txt']);
+    feelsLike = weatherList[position]['main']['feels_like'].round();
+    dateString = formatDate(date);
   }
 }
 
