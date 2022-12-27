@@ -2,7 +2,7 @@ import 'types.dart';
 import 'weatherController.dart';
 
 class WeatherRepository {
-  Future<List<ExtendedWeather>?> updateRepo(String lat, String long) async {
+  static Future<List<ExtendedWeather>?> updateRepo(String lat, String long) async {
     try {
       List<ExtendedWeather> repo =
           await WeatherController.fetchWeather(lat, long);
