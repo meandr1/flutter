@@ -20,14 +20,14 @@ class WeatherList {
           return ListTile(
               leading: CachedNetworkImage(
                   imageUrl:
-                      "http://openweathermap.org/img/wn/${weathers[index - 1].iconCode}@2x.png",
+                      "http://openweathermap.org/img/wn/${weathers[index - 1].icon}@2x.png",
                   progressIndicatorBuilder: (context, url, downloadProgress) =>
                       CircularProgressIndicator(
                           value: downloadProgress.progress),
                   errorWidget: (context, url, error) => Icon(Icons.error)),
               title: Text(
-                  " ${weathers[index - 1].dateString}\n ${weathers[index - 1].temperature}°C, " +
-                      "${weathers[index - 1].description}, feels_like ${weathers[index - 1].feelsLike}°C",
+                  " ${weathers[index - 1].formattedDate}\n ${weathers[index - 1].temp}°C, " +
+                      "${weathers[index - 1].main}, feels like ${weathers[index - 1].feels_like}°C",
                   style: const TextStyle(fontSize: 20)));
         });
   }
