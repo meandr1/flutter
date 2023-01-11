@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:weather/weatherCubit.dart';
-import 'package:weather/weatherScreen.dart';
+import 'package:weather/bloc/weatherBloc.dart';
+import 'package:weather/bloc/weatherBlocBuilder.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:weather/weatherStates.dart';
+import 'package:weather/bloc/weatherEvent.dart';
+import 'package:weather/bloc/weatherStates.dart';
 
 class MainScreen extends StatelessWidget {
   MainScreen({super.key});
@@ -12,8 +13,8 @@ class MainScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<WeatherCubit>(
-        create: (context) => WeatherCubit(WeatherInitial()),
+    return BlocProvider<WeatherBloc>(
+        create: (context) => WeatherBloc(),
         child: Builder(
             builder: (context) => Scaffold(
                   backgroundColor: const Color.fromARGB(255, 200, 200, 255),
@@ -50,7 +51,7 @@ class MainScreen extends StatelessWidget {
                               onPressed: () => showWeather(context),
                               child: const Text("Show Weather"))
                         ]),
-                    const Expanded(child: WeatherScreen())
+                    const Expanded(child: WeatherBlocBuilder())
                   ]),
                 )));
   }
@@ -66,6 +67,6 @@ class MainScreen extends StatelessWidget {
       lat = "49.882";
       long = "36.065";
     }
-    BlocProvider.of<WeatherCubit>(context).getWeather(lat, long);
+    BlocProvider.of<WeatherBloc>(context).add(ChangeWeatherEvent(lat, long));
   }
 }
