@@ -1,4 +1,4 @@
-import 'model.dart';
+import '../models/model.dart';
 import 'weatherService.dart';
 
 class WeatherRepository {
